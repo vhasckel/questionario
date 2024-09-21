@@ -1,14 +1,19 @@
+// src/index.js
 const express = require("express");
-const UsuariosControllers = require("./dominios/usuarios/usuarios.controllers");
-const QuestionariosControllers = require("./dominios/questionarios/questionarios.controllers");
+const { swaggerUi, swaggerSpec } = require("./swaggerConfig"); // Importe a configuração do Swagger
 const garantirAutenticacao = require("./middlewares/garantirAutenticacao");
 const authorize = require("./middlewares/authorization");
+const UsuariosControllers = require("./dominios/usuarios/usuarios.controllers");
+const QuestionariosControllers = require("./dominios/questionarios/questionarios.controllers");
 
 const app = express();
 app.use(express.json());
 
 const usuariosControllers = new UsuariosControllers();
 const questionariosControllers = new QuestionariosControllers();
+
+// Rota de documentação do Swagger
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 /** ROTAS USUÁRIOS */
 app.get("/usuarios", garantirAutenticacao, usuariosControllers.index);
